@@ -1,43 +1,44 @@
 export const COLORS = {
   // Primary Colors
-  primary: '#1CC29F',
-  primaryDark: '#0E8B73',
-  primaryLight: '#E8F8F5',
+  primary: '#00B8A9',
+  primaryDark: undefined,
+  primaryLight: '#E6F7F5',
 
   // Secondary Colors
-  secondary: '#2D4B64',
-  secondaryLight: '#E9EEF2',
+  secondary: '#F8B400',
+  secondaryLight: undefined,
 
   // Status Colors
   success: '#4CAF50',
   warning: '#FFC107',
-  error: '#FF5252',
+  error: '#F44336',
   info: '#2196F3',
 
   // Text Colors
-  textPrimary: '#2D4B64',
-  textSecondary: '#718096',
-  textLight: '#A0AEC0',
+  textPrimary: '#2C3E50',
+  textSecondary: '#95A5A6',
+  textLight: undefined,
 
   // Background Colors
-  background: '#FFFFFF',
-  backgroundLight: '#F7FAFC',
-  backgroundDark: '#EDF2F7',
+  background: undefined,
+  backgroundLight: '#F5F5F5',
+  backgroundDark: '#121212',
 
   // Border Colors
-  border: '#E2E8F0',
-  borderLight: '#EDF2F7',
+  border: '#E0E0E0',
+  borderLight: '#F0F0F0',
 
   // Additional UI Colors
-  overlay: 'rgba(0, 0, 0, 0.5)',
+  overlay: undefined,
   white: '#FFFFFF',
   black: '#000000',
+  transparent: 'transparent',
 };
 
 export const FONTS = {
-  regular: undefined,
-  medium: undefined,
-  bold: undefined,
+  regular: 'System',
+  medium: 'System',
+  bold: 'System',
 };
 
 export const SIZES = {
@@ -51,19 +52,22 @@ export const SIZES = {
   xxl: 32,
 
   // Font sizes
-  h1: 32,
-  h2: 24,
-  h3: 20,
-  h4: 18,
-  body1: 16,
-  body2: 14,
   caption: 12,
+  body2: 14,
+  body1: 16,
+  h4: 18,
+  h3: 22,
+  h2: 24,
+  h1: 32,
 
   // Specific component sizes
-  buttonHeight: 48,
-  inputHeight: 48,
-  borderRadius: 8,
-  cardPadding: 16,
+  buttonHeight: undefined,
+  inputHeight: undefined,
+  borderRadius: 12,
+  buttonRadius: 8,
+  cardPadding: undefined,
+  padding: 16,
+  margin: 16,
 };
 
 export const SHADOWS = {
