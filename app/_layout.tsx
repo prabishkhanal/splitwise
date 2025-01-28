@@ -7,6 +7,9 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { AuthProvider } from '@/context/AuthContext';
+import { AppProvider } from '@/context/AppContext';
+import { useProtectedRoute } from '@/components/navigation/AuthGuard';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -22,10 +25,7 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
+  const [loaded, error] = useFonts(FontAwesome.font);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
@@ -42,18 +42,54 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <AuthProvider>
+      <RootLayoutNav />
+    </AuthProvider>
+  );
 }
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  useProtectedRoute();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <AppProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen 
+            name="add-expense" 
+            options={{ 
+              presentation: 'modal',
+              title: 'Add Expense',
+              headerShown: true,
+            }} 
+          />
+          <Stack.Screen 
+            name="add-group" 
+            options={{ 
+              presentation: 'modal',
+              title: 'Create Group',
+              headerShown: true,
+            }} 
+          />
+          <Stack.Screen 
+            name="settle-up" 
+            options={{ 
+              presentation: 'modal',
+              title: 'Settle Up',
+              headerShown: true,
+            }} 
+          />
+          <Stack.Screen 
+            name="auth" 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+        </Stack>
+      </ThemeProvider>
+    </AppProvider>
   );
 }
