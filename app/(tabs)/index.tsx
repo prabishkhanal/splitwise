@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, ActivityIndicator } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { LineChart, PieChart } from 'react-native-chart-kit';
 import { Dimensions } from 'react-native';
@@ -28,6 +28,7 @@ export default function Index() {
     youOwe: 0,
     youAreOwed: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   // Mock data for charts
   const monthlyData: ChartData = {
@@ -68,22 +69,35 @@ export default function Index() {
   };
 
   useEffect(() => {
-    // Calculate stats from expenses
-    // This is mock data for now
-    setStats({
-      totalBalance: 250.75,
-      youOwe: 100.25,
-      youAreOwed: 351.00,
-    });
+    // Simulate loading data
+    setLoading(true);
+    setTimeout(() => {
+      // Calculate stats from expenses
+      // This is mock data for now
+      setStats({
+        totalBalance: 250.75,
+        youOwe: 100.25,
+        youAreOwed: 351.00,
+      });
+      setLoading(false);
+    }, 1000);
   }, [expenses]);
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // Implement your refresh logic here
+    // Simulate refresh
     setTimeout(() => {
       setRefreshing(false);
     }, 1000);
   }, []);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView

@@ -10,6 +10,7 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { AuthProvider } from '@/context/AuthContext';
 import { AppProvider } from '@/context/AppContext';
 import { useProtectedRoute } from '@/components/navigation/AuthGuard';
+import { COLORS } from '@/constants/theme';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -23,6 +24,52 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
+
+function RootLayoutNav() {
+  const colorScheme = useColorScheme();
+  useProtectedRoute();
+
+  return (
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <AppProvider>
+        <Stack screenOptions={{
+          headerStyle: {
+            backgroundColor: COLORS.background,
+          },
+          headerTintColor: COLORS.textPrimary,
+          headerBackTitleVisible: false,
+        }}>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="groups/[id]" options={{ 
+            title: "Group Details",
+            headerBackTitle: "Groups"
+          }} />
+          <Stack.Screen name="add-group" options={{ 
+            title: "Create Group",
+            presentation: 'modal',
+            headerLeft: () => null,
+          }} />
+          <Stack.Screen name="add-expense" options={{ 
+            title: "Add Expense",
+            presentation: 'modal',
+            headerLeft: () => null,
+          }} />
+          <Stack.Screen name="settle-up" options={{ 
+            title: "Settle Up",
+            presentation: 'modal',
+            headerLeft: () => null,
+          }} />
+          <Stack.Screen 
+            name="auth" 
+            options={{ 
+              headerShown: false 
+            }} 
+          />
+        </Stack>
+      </AppProvider>
+    </ThemeProvider>
+  );
+}
 
 export default function RootLayout() {
   const [loaded, error] = useFonts(FontAwesome.font);
@@ -46,50 +93,5 @@ export default function RootLayout() {
     <AuthProvider>
       <RootLayoutNav />
     </AuthProvider>
-  );
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
-  useProtectedRoute();
-
-  return (
-    <AppProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen 
-            name="add-expense" 
-            options={{ 
-              presentation: 'modal',
-              title: 'Add Expense',
-              headerShown: true,
-            }} 
-          />
-          <Stack.Screen 
-            name="add-group" 
-            options={{ 
-              presentation: 'modal',
-              title: 'Create Group',
-              headerShown: true,
-            }} 
-          />
-          <Stack.Screen 
-            name="settle-up" 
-            options={{ 
-              presentation: 'modal',
-              title: 'Settle Up',
-              headerShown: true,
-            }} 
-          />
-          <Stack.Screen 
-            name="auth" 
-            options={{ 
-              headerShown: false 
-            }} 
-          />
-        </Stack>
-      </ThemeProvider>
-    </AppProvider>
   );
 }

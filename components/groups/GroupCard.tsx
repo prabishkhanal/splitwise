@@ -15,7 +15,9 @@ interface GroupCardProps {
   members: Member[];
   totalBalance: number;
   image?: string;
+  isSelected?: boolean;
   onPress?: () => void;
+  onLongPress?: () => void;
 }
 
 const GroupCard = ({
@@ -23,33 +25,53 @@ const GroupCard = ({
   members,
   totalBalance,
   image,
+  isSelected,
   onPress,
+  onLongPress,
 }: GroupCardProps) => {
   const formatAmount = (amount: number) => {
-    const prefix = amount >= 0 ? 'you are owed ' : 'you owe ';
-    return prefix + Math.abs(amount).toLocaleString('en-US', {
+    const isPositive = amount >= 0;
+    return `${isPositive ? 'you are owed ' : 'you owe '}${Math.abs(amount).toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
-    });
+      minimumFractionDigits: 2,
+    })}`;
+  };
+
+  const renderMemberAvatars = () => {
+    return members.map((_, index) => (
+      <View
+        key={index}
+        style={[
+          styles.memberAvatar,
+          { marginLeft: index > 0 ? -8 : 0 },
+        ]}
+      >
+        <Text style={styles.memberInitial}>
+          {String.fromCodePoint(0x1F464)}
+        </Text>
+      </View>
+    ));
   };
 
   return (
-    <Card variant="elevated" onPress={onPress} style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.groupInfo}>
-          {image ? (
-            <Image source={{ uri: image }} style={styles.groupImage} />
-          ) : (
-            <View style={[styles.groupImage, styles.placeholderImage]}>
-              <FontAwesome name="users" size={24} color={COLORS.white} />
-            </View>
-          )}
-          <View style={styles.textContainer}>
+    <Card
+      variant="elevated"
+      onPress={onPress}
+      onLongPress={onLongPress}
+      style={[styles.container, isSelected && styles.selectedContainer]}
+    >
+      <View style={styles.content}>
+        <View style={styles.leftContent}>
+          <View style={styles.groupIcon}>
+            <FontAwesome name="users" size={20} color={COLORS.white} />
+          </View>
+          <View style={styles.groupInfo}>
             <Text style={styles.groupName} numberOfLines={1}>
               {name}
             </Text>
             <Text style={styles.memberCount}>
-              {members.length} {members.length === 1 ? 'member' : 'members'}
+              {members.length} member{members.length !== 1 ? 's' : ''}
             </Text>
           </View>
         </View>
@@ -62,58 +84,45 @@ const GroupCard = ({
           {formatAmount(totalBalance)}
         </Text>
       </View>
-
-      <View style={styles.membersContainer}>
-        {members.slice(0, 3).map((member, index) => (
-          <View key={member.id} style={[styles.memberItem, index > 0 && styles.memberOffset]}>
-            {member.avatar ? (
-              <Image source={{ uri: member.avatar }} style={styles.avatar} />
-            ) : (
-              <View style={[styles.avatar, styles.placeholderAvatar]}>
-                <Text style={styles.avatarText}>
-                  {member.name.charAt(0).toUpperCase()}
-                </Text>
-              </View>
-            )}
-          </View>
-        ))}
-        {members.length > 3 && (
-          <View style={[styles.memberItem, styles.memberOffset]}>
-            <View style={[styles.avatar, styles.moreAvatar]}>
-              <Text style={styles.moreText}>+{members.length - 3}</Text>
-            </View>
-          </View>
-        )}
-      </View>
+      {!isSelected && (
+        <View style={styles.memberAvatars}>
+          {renderMemberAvatars()}
+        </View>
+      )}
     </Card>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    marginHorizontal: SIZES.sm,
     marginVertical: SIZES.xs,
+    padding: SIZES.sm,
   },
-  header: {
+  selectedContainer: {
+    backgroundColor: COLORS.backgroundLight,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+  },
+  content: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
   },
-  groupInfo: {
+  leftContent: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
   },
-  groupImage: {
-    width: 50,
-    height: 50,
-    borderRadius: SIZES.borderRadius,
-  },
-  placeholderImage: {
+  groupIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
     backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  textContainer: {
+  groupInfo: {
     marginLeft: SIZES.sm,
     flex: 1,
   },
@@ -121,17 +130,17 @@ const styles = StyleSheet.create({
     fontSize: SIZES.body1,
     fontFamily: FONTS.medium,
     color: COLORS.textPrimary,
+    marginBottom: 2,
   },
   memberCount: {
-    fontSize: SIZES.caption,
+    fontSize: SIZES.body2,
     fontFamily: FONTS.regular,
     color: COLORS.textSecondary,
-    marginTop: 2,
   },
   balance: {
     fontSize: SIZES.body2,
     fontFamily: FONTS.medium,
-    marginLeft: SIZES.sm,
+    textAlign: 'right',
   },
   positiveBalance: {
     color: COLORS.success,
@@ -139,42 +148,24 @@ const styles = StyleSheet.create({
   negativeBalance: {
     color: COLORS.error,
   },
-  membersContainer: {
+  memberAvatars: {
     flexDirection: 'row',
-    marginTop: SIZES.md,
+    marginTop: SIZES.sm,
+    paddingLeft: 48,
   },
-  memberItem: {
-    position: 'relative',
-  },
-  memberOffset: {
-    marginLeft: -SIZES.sm,
-  },
-  avatar: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
+  memberAvatar: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: COLORS.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
     borderColor: COLORS.white,
   },
-  placeholderAvatar: {
-    backgroundColor: COLORS.secondary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarText: {
-    color: COLORS.white,
-    fontSize: SIZES.caption,
-    fontFamily: FONTS.medium,
-  },
-  moreAvatar: {
-    backgroundColor: COLORS.secondaryLight,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  moreText: {
-    color: COLORS.secondary,
-    fontSize: SIZES.caption,
-    fontFamily: FONTS.medium,
+  memberInitial: {
+    fontSize: 12,
+    color: COLORS.textSecondary,
   },
 });
 

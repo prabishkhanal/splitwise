@@ -11,6 +11,7 @@ import { COLORS, SIZES, SHADOWS, FONTS } from '../../constants/theme';
 interface CardProps {
   children: React.ReactNode;
   onPress?: () => void;
+  onLongPress?: () => void;
   style?: ViewStyle;
   variant?: 'default' | 'elevated' | 'outline';
 }
@@ -18,6 +19,7 @@ interface CardProps {
 const Card = ({
   children,
   onPress,
+  onLongPress,
   style,
   variant = 'default',
 }: CardProps) => {
@@ -50,12 +52,14 @@ const Card = ({
     return baseStyle;
   };
 
-  const Container = onPress ? TouchableOpacity : View;
+  const Container = onPress || onLongPress ? TouchableOpacity : View;
 
   return (
     <Container
       style={[getCardStyles(), style]}
       onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={300}
       activeOpacity={0.7}
     >
       {children}

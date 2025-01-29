@@ -62,7 +62,7 @@ export default StyleSheet.create({
     borderRadius: SIZES.radius,
     padding: SIZES.lg,
     marginBottom: SIZES.md,
-    ...SHADOWS.small,
+    ...SHADOWS.medium,
   },
   chartTitle: {
     fontSize: SIZES.h3,
@@ -72,19 +72,24 @@ export default StyleSheet.create({
   },
   chartContainer: {
     marginHorizontal: -SIZES.md,
+    alignItems: 'center',
   },
   categoryList: {
-    marginTop: SIZES.md,
+    marginTop: SIZES.xl,
   },
   categoryItem: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: SIZES.sm,
+    paddingVertical: SIZES.xs,
+    paddingHorizontal: SIZES.sm,
+    borderRadius: SIZES.radius,
+    backgroundColor: COLORS.backgroundLight,
   },
   categoryIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SIZES.sm,
@@ -94,8 +99,9 @@ export default StyleSheet.create({
   },
   categoryName: {
     fontSize: SIZES.body2,
-    fontWeight: '500',
+    fontWeight: '600',
     color: COLORS.textPrimary,
+    marginBottom: 2,
   },
   categoryAmount: {
     fontSize: SIZES.body3,
@@ -103,7 +109,7 @@ export default StyleSheet.create({
   },
   categoryPercentage: {
     fontSize: SIZES.body2,
-    fontWeight: '500',
-    color: COLORS.textPrimary,
+    fontWeight: '600',
+    color: COLORS.primary,
   },
 });
